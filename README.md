@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # restaurant
 
 ## Project setup
@@ -22,3 +23,6 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+=======
+# restaurant
+>>>>>>> c04f163f3ddda2e27a060e6cca5ceafadc74ebe1
