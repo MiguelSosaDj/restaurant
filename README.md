@@ -14,7 +14,10 @@ npm run serve
 ### Compiles and minifies for production
 ```
 npm run build
+sosa
 ```
+
+
 
 ### Lints and fixes files
 ```
