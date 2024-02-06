@@ -1,6 +1,8 @@
-<<<<<<< HEAD
-# restaurant
 
+# restaurant token
+```
+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
+```
 ## Project setup
 ```
 npm install
