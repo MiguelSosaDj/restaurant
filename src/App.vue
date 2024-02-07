@@ -88,17 +88,20 @@
           </div>
         </div>
         <div class="">
-          <div class="pay">
-            <h3>Pagos</h3>
+        <div class="pay">
+          <h3>Pagos</h3>
 
-            <div v-if="showDistribution" class="resultados">
-              {{paymentMethod}}  {{ propinaPorEmpleado.toLocaleString('en-US', { style: 'currency', currency: 'USD' })  }}
+          <template v-if="showDistribution">
+            <div v-for="(pago, index) in pagos" :key="index" class="resultados">
+              {{ pago.paymentMethod }} {{ pago.monto.toLocaleString('en-US', { style: 'currency', currency: 'USD' }) }}
             </div>
-            <div v-else class="resultados">
-              Sin Pagos
-            </div>
-
+          </template>
+          <div v-else class="resultados">
+            Sin Pagos
           </div>
+        </div>
+
+
 
         </div>
 
@@ -152,6 +155,7 @@ export default {
       activeSection: 'tipForm',
       tipPayments: [],
       nombreEmpresa: "Nombre de tu empresa",
+      pagos: [],
     };
   },
   watch: {
@@ -203,6 +207,12 @@ export default {
 
         this.propinaPorEmpleado = montoPropinas;
         this.showDistribution = true;
+
+        this.pagos.push({
+          paymentMethod: this.paymentMethod,
+          monto: montoPropinas,
+        });
+
 
         const response = await axios.post('http://localhost:3000/capturar-propinas', {
           monto: montoPropinas,
