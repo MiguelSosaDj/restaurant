@@ -1,13 +1,15 @@
 <template>
   <div id="app">
   <div class="sidebar">
-    <img alt="logo" src="/public/img/empresa.png">
+    <img alt="logo" src="./img/empresa1.png">
     <nav>
       <div @click="showTipForm" :class="{ active: activeSection === 'tipForm' }">
-        <span>Propinas</span>
+        <img style="width:23px; height: 23px; margin-top: 19px" alt="logo" src="./img/calculator.png">
+
       </div>
       <div @click="showTipList" :class="{ active: activeSection === 'tipList' }">
-        <span>Pagos</span>
+        <img  style="width:23px; height: 23px; margin-top: 19px" alt="logo" src="./img/to-do-list.png">
+
       </div>
     </nav>
   </div>
@@ -50,10 +52,10 @@
           <label for="paymentMethod" style="margin-top:100px">Elige el método de Pago:</label>
           <div class="payment-options">
             <button :class="{ selected: paymentMethod === 'cash' }" @click="setPaymentMethod('cash')">
-              <img src="/public/img/money.png" alt="Efectivo">
+              <img src="./img/money.png" alt="Efectivo">
             </button>
             <button :class="{ selected: paymentMethod === 'card' }" @click="setPaymentMethod('card')">
-              <img src="/public/img/credit-card.png" alt="Tarjeta">
+              <img src="./img/credit-card.png" alt="Tarjeta">
             </button>
           </div>
           <div div style="float:left">
@@ -518,7 +520,8 @@ h2 {
 
 nav div.active {
   background-color: #ee6f60;
-  width: 30px;
+  width: 20px;
+  height: 20px;
   border-radius: 15px;
   color: white;
 }
