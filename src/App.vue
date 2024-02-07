@@ -40,10 +40,10 @@
             </div>
           <div  class="numEmpleadosCount">
             <div v-if="showDistribution" >
-              <p>{{ propinaPorEmpleado.toLocaleString('en-US', { style: 'currency', currency: 'USD' })  }} X persona.</p>
+              <p>{{ propinaPorEmpleado.toLocaleString('en-US', { style: 'currency', currency: 'USD' })  }} por persona.</p>
             </div>
             <div v-else >
-              <p>$0.00 X persona.</p>
+              <p>$0.00 por persona.</p>
             </div>
           </div>
 
