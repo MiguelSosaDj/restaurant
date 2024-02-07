@@ -1,7 +1,7 @@
 <template>
   <div id="app">
   <div class="sidebar">
-    <img src="company-logo.png" alt="Empresa" class="company-logo">
+    <img alt="logo" src="/public/img/empresa.png">
     <nav>
       <div @click="showTipForm" :class="{ active: activeSection === 'tipForm' }">
         <span>Propinas</span>
@@ -11,61 +11,95 @@
       </div>
     </nav>
   </div>
-
-
     <div class="main-content">
-      <h1 v-if="activeSection === 'tipForm'">Pago de Propinas</h1>
+      <h1 v-if="activeSection === 'tipForm'"></h1>
       <h1 v-if="activeSection === 'tipList'">Lista de Pagos de Propinas</h1>
-
+      <div class="title_section">
+        <div style="float:left">
+          <h1>Pago de Propinas</h1>
+        </div>
+        <div  style="float:right; margin-right:30px">
+          <h8>Efectivo en Caja</h8>
+          <div><h2>$5.000.000</h2></div>
+        </div>
+      </div>
+      <br>
+      <div class="linea"></div>
       <div v-if="activeSection === 'tipForm'" class="tip-form">
-        <div class="left-section">
-          <label for="totalTips">Monto Total de Propinas:</label>
-          <span class="total-tips-amount">{{totalTips.toLocaleString('en-US', { style: 'currency', currency: 'USD' })  }}</span>
 
-          <label for="divideTips">Dividir Propinas entre Empleados:</label>
-          <input v-model="divideTips" type="checkbox" id="divideTips">
+      <div class="left-section">
+          <label for="totalTips" class="totalPropinas">Total de Propinas:</label>
+          <div class="resultadoPropinas">
+            <h2  >{{totalTips.toLocaleString('en-US', { style: 'currency', currency: 'USD' })  }}</h2>
+          </div>
 
-          <label for="numEmpleados">Número de Empleados:</label>
-          <input v-model="numEmpleados" type="number" id="numEmpleados" placeholder="Ingrese el número de empleados">
+          <label for="numEmpleados">¿Entre cúantos quieres dividir las
+              Propinas?</label>
+            <div  class="numEmpleados">
+              <input v-model="numEmpleados" type="number" id="numEmpleados" class="numEmpleados" placeholder="Ingrese el número de empleados">
+            </div>
+          <div  class="numEmpleadosCount">
+            <div v-if="showDistribution" >
+              <p>{{ propinaPorEmpleado.toLocaleString('en-US', { style: 'currency', currency: 'USD' })  }} X persona.</p>
+            </div>
+            <div v-else >
+              <p>$0.00 X persona.</p>
+            </div>
+          </div>
 
-          <label for="paymentMethod">Método de Pago:</label>
+          <label for="paymentMethod" style="margin-top:100px">Elige el método de Pago:</label>
           <div class="payment-options">
             <button :class="{ selected: paymentMethod === 'cash' }" @click="setPaymentMethod('cash')">
-              <img src="cash-icon.png" alt="Efectivo">
+              <img src="/public/img/money.png" alt="Efectivo">
             </button>
             <button :class="{ selected: paymentMethod === 'card' }" @click="setPaymentMethod('card')">
-              <img src="card-icon.png" alt="Tarjeta">
+              <img src="/public/img/credit-card.png" alt="Tarjeta">
             </button>
           </div>
-
-          <button class="button_pay" @click="submitTips">Pagar Propinas</button>
-
-          <div v-if="showDistribution" class="result-message">
-            <p>Las propinas se dividen {{ propinaPorEmpleado.toLocaleString('en-US', { style: 'currency', currency: 'USD' })  }} por persona.</p>
+          <div div style="float:left">
+            <div v-if="showDistribution" class="result-message">
+              <p>Total Pagado:           {{ propinaPorEmpleado.toLocaleString('en-US', { style: 'currency', currency: 'USD' })  }}</p>
+            </div>
+            <div v-else class="result-message">
+              <p>Total Pagado:        $0.00 </p>
+            </div>
           </div>
         </div>
-
         <div class="right-section">
-          <div class="total-tips-section">
-            <span class="total-tips-label">Total Propinas:</span>
-            <span class="total-tips-amount">{{ totalTips.toLocaleString('en-US', { style: 'currency', currency: 'USD' })  }}</span>
-          </div>
-
           <div class="calculator">
+          <div class="total-tips-section">
+            <span class="">$</span>
+            <span class="total-tips-amount">{{ montoAsignar.toLocaleString('en-US', { style: 'currency', currency: 'USD' })   }}</span>
+          </div>
+          <hr>
             <div class="buttons">
               <button v-for="button in calculatorButtons" :key="button" @click="handleButtonClick(button)">
                 {{ button }}
               </button>
             </div>
-
-            <div class="result-display">
-              <p>Monto a asignar:</p>
-              <span>{{ montoAsignar.toLocaleString('en-US', { style: 'currency', currency: 'USD' })  }}</span>
-            </div>
-
             <button class="assign-button" @click="assignTip">✔</button>
+
+
+          </div>
+          <div>
+              <button class="button_pay" @click="submitTips">Pagar Propinas</button>
           </div>
         </div>
+        <div class="">
+          <div class="pay">
+            <h3>Pagos</h3>
+
+            <div v-if="showDistribution" class="resultados">
+              {{paymentMethod}}  {{ propinaPorEmpleado.toLocaleString('en-US', { style: 'currency', currency: 'USD' })  }}
+            </div>
+            <div v-else class="resultados">
+              Sin Pagos
+            </div>
+
+          </div>
+
+        </div>
+
       </div>
 
       <div v-if="activeSection === 'tipList'" class="tip-list">
@@ -77,6 +111,7 @@
               <th># de Personas</th>
               <th>Monto por Persona</th>
               <th>Tipo de Pago</th>
+              <th>Recibo</th>
             </tr>
           </thead>
           <tbody>
@@ -86,6 +121,9 @@
               <td>{{ payment.persons }}</td>
               <td>{{ payment.amount.toLocaleString('en-US', { style: 'currency', currency: 'USD' }) }}</td>
               <td>{{ payment.paymentType }}</td>
+              <td>
+                <button @click="descargarRecibo(payment)">Descargar Recibo</button>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -103,17 +141,54 @@ export default {
     return {
       totalTips: 0,
       divideTips: false,
-      numEmpleados: 1,
+      numEmpleados: 0,
       paymentMethod: 'cash',
       showDistribution: false,
       propinaPorEmpleado: 0,
       montoAsignar: 0,
-      calculatorButtons: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '00', '✔'],
+      calculatorButtons: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '00'],
       activeSection: 'tipForm',
       tipPayments: [],
+      nombreEmpresa: "Nombre de tu empresa",
     };
   },
+  watch: {
+    numEmpleados: 'actualizarDistribucion',
+  },
   methods: {
+    async actualizarDistribucion() {
+      try {
+        let montoPropinas = this.totalTips;
+
+        if (montoPropinas !== 0 && this.numEmpleados > 0) {
+          montoPropinas /= this.numEmpleados;
+
+          // Realizar la petición al servidor si es necesario
+          await axios.post('http://localhost:3000/dividir-propinas', {
+            empleados: this.numEmpleados,
+          });
+
+          this.propinaPorEmpleado = montoPropinas;
+          this.showDistribution = true;
+
+          // Limpiar la lista de propinas al actualizar la distribución
+          this.tipPayments = [];
+
+          // Agregar la nueva propina al arreglo
+          this.tipPayments.push({
+            id: this.tipPayments.length + 1,
+            dateTime: new Date().toLocaleString(),
+            amount: montoPropinas,
+            persons: this.numEmpleados,
+            paymentType: this.paymentMethod === 'cash' ? 'Efectivo' : 'Tarjeta',
+          });
+
+          console.log('Distribución actualizada:', montoPropinas);
+        }
+      } catch (error) {
+        console.error('Error al enviar propinas:', error);
+      }
+    },
     async submitTips() {
       try {
         let montoPropinas = this.totalTips;
@@ -153,14 +228,13 @@ export default {
       }
     },
     assignTip() {
-      this.totalTips += this.montoAsignar; // Restar el monto asignado del totalTips
+      this.totalTips += this.montoAsignar;
       this.showSuccessMessage();
     },
     showSuccessMessage() {
       alert('Propina asignada correctamente');
       this.montoAsignar = 0;
     },
-
     setPaymentMethod(method) {
       // Cambiar el método de pago
       this.paymentMethod = method;
@@ -171,20 +245,63 @@ export default {
     showTipList() {
       this.activeSection = 'tipList';
     },
+    descargarRecibo(payment) {
+      const contenidoRecibo = `
+        Fecha: ${ payment.dateTime}
+        Numero de personas: ${payment.persons}
+        Monto por Persona: ${payment.amount}
+        Tipo de Pago: ${payment.paymentType}
+      `;
+      const blob = new Blob([contenidoRecibo], { type: "text/plain" });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `Recibo_${payment.id}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    },
   },
 };
 </script>
+
 <style scoped>
 #app {
   text-align: center;
   margin-top: 2em;
 }
 
+.title_section {
+  text-align: center;
+  margin-bottom: 100px;
+}
+
+.linea {
+  border-top: 1px solid #bdb2b2;
+  height: 0px;
+  max-width: 920px;
+  padding: 0;
+  margin: 60px auto 0 auto;
+}
+
+hr {
+border: 0;
+border-bottom: 2px solid #bdb2b2;
+height:0;
+}
+
+.main-section {
+  display: flex;
+  text-align: center;
+  justify-content: space-around;
+}
+
 .tip-form {
   display: flex;
   justify-content: space-between;
-  max-width: 800px;
-  margin: 0 auto;
+  max-width: 950px;
+  margin-top: 20px;
 }
 
 .left-section {
@@ -193,6 +310,7 @@ export default {
 
 .right-section {
   width: 48%;
+  margin:0 30px 0 50px;
 }
 
 label {
@@ -225,13 +343,31 @@ input, select {
   cursor: pointer;
 }
 
+.numEmpleados {
+  width: 50%;
+  height: 40px;
+  float: left;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.numEmpleadosCount {
+  width: 48%;
+  height: 60px;
+  float: right;
+  border-radius: 20px;
+  Color: #ee6f60;
+  cursor: pointer;
+}
+
 .payment-options button img {
   width: 40px;
   height: 40px;
 }
 
 .payment-options button.selected {
-  background-color: #ed5252;
+  background-color: #ee6f60
+;
 }
 
 button {
@@ -242,12 +378,16 @@ button {
   cursor: pointer;
 }
 .button_pay {
-  width: 100px;
-  height: 80px;
+  width: 252px;
+  height: 50px;
   font-size: 1em;
-  margin: 0.2em;
+  margin: 2.2em;
   cursor: pointer;
+  border: 0.1px;
   border-radius: 34px;
+  float:right;
+  Color: white;
+  background-Color: #ee6f60;
 }
 
 .buttons {
@@ -257,8 +397,8 @@ button {
 
 .calculator {
   margin-top: 1em;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  border: 1px solid #f5eded;
+  border-radius: 19px;
   padding: 1em;
   background-color: #f5eded
 }
@@ -268,23 +408,24 @@ button {
 }
 
 .assign-button {
-  background-color: #ed5252;
+  background-color: #ee6f60
+;
   color: white;
-  width: 80%;
+  width: 20%;
   padding: 1em;
   font-size: 1em;
   border: none;
   border-radius: 18px;
   cursor: pointer;
+  float: right;
+  margin-top: -50px;
+  margin-right: 40px;
 }
 
 .result-message {
   margin-top: 1em;
   padding: 1em;
-  background-color: #e6f7e8;
-  border: 1px solid #ed5252;
-  border-radius: 5px;
-  color: #ed5252;
+  color: #ee6f60;
 }
 
 .total-tips-section {
@@ -299,20 +440,15 @@ button {
   font-weight: bold;
 }
 
-.total-tips-amount {
-  color: #d9534f;
-  font-size: 1.2em;
-}
-
 .sidebar {
-  width: 200px;
-  background-color: #f5f5f5; /* Color más neutro */
-  color: #333; /* Texto más oscuro para contraste */
+  width: 60px;
+  background-color: #f5f5f5;
+  color: #333;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding-top: 20px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sutil sombra */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   float: left
 }
 
@@ -336,16 +472,46 @@ nav div {
   align-items: center;
   padding: 10px;
   border-radius: 5px;
-  transition: background-color 0.3s; /* Transición suave en el cambio de color */
+  transition: background-color 0.3s;
 }
 
 nav div:hover {
-  background-color: #ddd; /* Color de fondo al pasar el ratón */
+  background-color: #ddd;
+}
+h8 {
+  Color: #ee6f60;
+}
+
+h2 {
+  Color: #ee6f60;
+  background-color:#fbdeda;
+  border-radius: 5px;
+}
+
+.totalPropinas {
+  Color: #ee6f60;
+}
+
+.resultadoPropinas  {
+  Color: #ee6f60;
+  background-color:#fbdeda;
+  border-radius: 5px;
+}
+
+.resultados {
+  Color: black;
+  border-radius: 10px;
+  border: 1px solid;
+  width: 190px;
+  height:25px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
 nav div.active {
-  background-color: #ed5252; /* Color de fondo cuando está activo */
-  color: white; /* Texto en color blanco cuando está activo */
+  background-color: #ee6f60;
+  width: 30px;
+  border-radius: 15px;
+  color: white;
 }
 
 
@@ -369,10 +535,9 @@ nav div.active {
 }
 
 .main-content {
-  margin-left: 220px;
+  margin-left: 100px;
 }
 
-/* Estilo adicional para la sección de Lista de Pagos */
 .tip-list table {
   width: 100%;
   border-collapse: collapse;
