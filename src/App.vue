@@ -327,20 +327,22 @@ input, select {
 
 .payment-options {
   display: flex;
-  justify-content: space-between;
   margin-bottom: 1em;
+  margin-left:6em;
 }
 
 .payment-options button {
-  width: 48%;
-  height: 60px;
+  width: 65px;
+  height: 50px;
   background-color: #f7fff7;
-  border-width: 4px;
   border-style: solid;
   border-color: #c0c7c0;
   color: black;
-  border-radius: 34px;
+  border: 0;
+  border-radius: 20px;
   cursor: pointer;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
 }
 
 .numEmpleados {
@@ -393,6 +395,13 @@ button {
 .buttons {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+}
+
+.buttons button {
+  background-Color:white;
+  border-radius: 15px;
+  border:0;
+
 }
 
 .calculator {
